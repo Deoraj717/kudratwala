@@ -1,0 +1,53 @@
+.product-tile{
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    width:15rem;
+    gap:1rem;
+    padding: 1rem;
+    background-color:rgb(177, 179, 86);
+    margin: auto;
+    box-shadow: 0 1.5rem 3rem -0.90rem hsla(0,0%,0%,0.25);
+    transition: transform 0.2s,box-shadow 0.2s;
+    height:25rem;
+    border-radius: 15px;
+}
+.product-tile img{
+    height:60%;
+    object-fit:cover;
+}
+
+.product-tile:hover{
+    transform: scale(1.08);
+    box-shadow: 0 1.5rem 3rem -0.90rem hsla(0,0%,0%,0.50);
+}
+.product-tile-price .previous-price{
+    text-decoration: line-through red;
+}
+.product-tile-price .new-price{
+    font-weight: bold;
+    color:rgb(201, 20, 56);
+    margin-left: 15px;
+    font-size:large;
+}
+.product-tile-add-to-cart-button{
+    width: 100%;
+}
+.product-tile-add-to-cart-button button{
+    cursor: pointer;
+    width: 80%;
+    height:2.5rem;
+    border-radius: 25px;
+    background-color: aquamarine;
+    font-weight: bold;
+    font-size:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:1rem;
+    margin:auto;
+}
+.product-tile-cart-icon{
+    font-size: 20px;
+}
