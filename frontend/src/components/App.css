@@ -1,0 +1,29 @@
+body{
+    margin:-1px;
+    font-family: monospace;
+}
+.main-container{
+    color:rgb(4, 42, 4);
+}
+h1{
+    /* margin: 60px; */
+    margin-top: 10px;
+    position: relative; 
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; 
+
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    left: 46%;
+    bottom: 0;
+    border: 2px solid rgb(4, 62, 17);
+    border-radius: 8px;
+    width: 8%;
+    transition: transform 0.3s ease; /* Smooth animation */
+}
+
+h1:hover::after {
+    transform: scaleX(1.2); /* Scales down horizontally */
+}

@@ -1,0 +1,31 @@
+.about-cont{
+    width:80%;
+    min-height:50vh;
+    height:fit-content;
+    margin:auto;
+    margin-top:3rem;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+}
+.about-us{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+    gap:2rem;
+    margin:auto;
+}
+.about-image{
+    height:100%;
+    width:100%;
+    min-width:400px;
+}
+.about-image img{
+    width:100%;
+    border-radius: 25px;
+}
+.about-details{
+    width:80%;
+    margin:auto;
+    margin-top:2rem;
+}

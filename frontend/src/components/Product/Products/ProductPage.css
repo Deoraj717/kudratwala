@@ -1,0 +1,38 @@
+/* ProductPage.css */
+.product-page {
+  width: 98%;
+  /* width: calc(100% + 16vw); */
+  /* margin: auto; */
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+   margin-bottom:2rem;
+   margin-left: 20px;
+   justify-content: center;
+   /* margin-right: 10px; */
+
+
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+  .product-page {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.25rem;
+  }
+}

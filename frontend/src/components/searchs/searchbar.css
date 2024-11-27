@@ -1,0 +1,58 @@
+/* src/components/SearchBar.css */
+.search-bar-container {
+  position: relative;
+  margin: 20px;
+}
+
+.search-input {
+  width: 300px;
+  padding: 10px;
+  border: 3px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f0f0;
+}
+
+/* src/components/SearchBar.css */
+.suggestions-dropdown {
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  z-index: 1000;
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+  background-color: #e0e0e0; /* Highlight color */
+}

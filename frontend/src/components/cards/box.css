@@ -1,0 +1,100 @@
+.icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 5vw 2vw; /* Use vw units for padding to make it flexible */
+    margin-top: 2vw;
+    justify-content: center;
+  }
+  
+  .icons-container .icons {
+    padding: 2vw;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: solid;
+    flex-wrap: wrap;
+  }
+  
+  .icons-container .icons img {
+    height: 3vw;
+    width: 3vw; /* Use vw to make icon size flexible */
+    margin: 0 5vw;
+    max-width: 100%;
+  }
+  
+  .icons-container .icons h3 {
+    color: #333;
+    padding-bottom: 1vw;
+    font-size: 1.5vw; /* Font size adjusts based on screen width */
+  }
+  
+  .icons-container .icons span {
+    color: #555;
+    font-size: 1vw; /* Use vw for font-size flexibility */
+  }
+  
+  .icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Media Queries for responsiveness */
+  @media (max-width: 768px) {
+    .icons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 5vw 2vw; /* Use vw units for padding to make it flexible */
+        margin-top: 2vw;
+        justify-content: center;
+      }
+
+    .icons-container .icons {
+        padding: 2vw;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: solid;
+        flex-wrap: wrap;
+    }
+  
+    .icons-container .icons img {
+      margin: 0 0 4vw 0;
+      height: 5vw; /* Adjust icon size on smaller screens */
+    }
+  
+    .icons-container .icons h3 {
+      font-size: 2vw; /* Larger font size for smaller screens */
+    }
+  
+    .icons-container .icons span {
+      font-size: 1vw; /* Adjust span font size */
+    }
+  }
+  
+  /* Media Queries for very small screens (like phones) */
+  @media (max-width: 480px) {
+    .icons-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .icons-container .icons img {
+        height: 3vw;
+        width: 3vw; /* Use vw to make icon size flexible */
+        margin: 0 5vw;
+        max-width: 80%;
+    }
+  
+    .icons-container .icons h3 {
+      font-size: 2vw;
+    }
+  
+    .icons-container .icons span {
+      font-size: 1vw;
+    }
+  }
+  

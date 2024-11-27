@@ -1,0 +1,65 @@
+.cards {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px; /* Reduced gap between cards */
+    justify-content: center;
+    width: 100%;
+    margin-left: 20px; /* Reduced margin */
+}
+
+.ball {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    width: 90px; /* Smaller width for the ball */
+  
+    height: 80px;/* Reduced height */
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+h1 {
+    font-size: 10px; /* Smaller font size for h1 */
+}
+
+img {
+    width: 80px; /* Smaller image size */
+    height: 80px; /* Smaller image size */
+    border-radius: 50%;
+}
+
+/* Responsive adjustments for screens max-width 768px */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: row;
+        gap: 20px; /* Reduced gap for smaller screens */
+        margin-left: 0;
+    }
+
+    .ball {
+        width: 60px; /* Smaller width for the ball on smaller screens */
+        width: 60%; /* Smaller width for ball on tablet/medium screens */
+    }
+
+    h1 {
+        font-size: 6px; /* Smaller font size for h1 on medium screens */
+    }
+
+    img {
+        width: 50px; /* Reduced image size */
+        height: 50px; /* Reduced image size */
+    }
+}
+
+/* Further adjustments for screens max-width 480px (mobile screens) */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 5px; /* Even smaller font size */
+    }
+
+    img {
+        width: 40px; /* Smaller image size for mobile */
+        height: 40px; /* Smaller image size for mobile */
+    }
+}
