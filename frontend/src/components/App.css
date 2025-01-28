@@ -25,5 +25,5 @@ h1::after {
 }
 
 h1:hover::after {
-    transform: scaleX(1.2); /* Scales down horizontally */
+    transform: scaleX(1.2);
 }

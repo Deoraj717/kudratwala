@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddProduct.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
+
+  const navigate = useNavigate();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const [formData, setFormData] = useState({
     product_name: '',
+    product_id:'',
     price: '',
     image: '',
     stock: '',
@@ -17,13 +21,47 @@ const AddProduct = () => {
     plant_type:''
   });
 
+  const [stockData,setStockData] = useState({
+    product_id:'',
+    stock:0
+  })
+
+  const [update,setUpdate] = useState(false);
+
+  useEffect(()=>{
+
+    const check_seller = async ()=>{
+      try{
+        const check = await axios.get(`${backendUrl}/users/checkSeller`,{withCredentials:true});
+        console.log(check);
+        if(!check){
+          navigate("/seller");
+        }
+      }catch(err){
+        console.log("err");
+        navigate("/seller");
+      }
+    }
+
+    check_seller();
+
+  },[])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
+    setStockData({
       ...formData,
       [name]: value,
     });
   };
+
+  const handleChangeStock = (e)=>{
+    const {name,value} = e.target;
+    setStockData({
+      ...oldDate,
+      [name]:value,
+    })
+  }
 
   const handleImageChange = (e) => {
     setFormData({
@@ -31,6 +69,18 @@ const AddProduct = () => {
       image: e.target.files[0],
     });
   };
+
+  const updateProduct = async (event)=>{
+    event.preventDefault();
+    try{
+      const res = await axios.post(`${backendUrl}/product/update`,stockData,{withCredentials:true});
+      if(res){
+        console.log("product stck updated");
+      }
+    }catch(err){
+      console.log(err);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,8 +96,6 @@ const AddProduct = () => {
     formDataToSend.append('area', formData.area);
     formDataToSend.append('tips', formData.tips);
     formDataToSend.append('plant_type', formData.plant_type);
-    
-    // Append the image file
     formDataToSend.append('image', formData.image);
   
     try {
@@ -64,7 +112,46 @@ const AddProduct = () => {
     }
   };
 
+  const update_stock = (event)=>{
+    event.preventDefault();
+    setUpdate(true);
+  }
+
+  if(update == true)return(
+    <form className='add-product-form' onSubmit = {handleSubmit} encType = "multipart/form-data">
+      <div className='form-group'>
+        <label htmlFor = "product_id">Product Id</label>
+        <input
+         type = "text"
+         id = "product_id"
+         name = "product_id"
+         value = {formData.product_id}
+         onChange={handleChangeStock}
+         className='form-control'
+         required
+         />
+      </div>
+      <div className='form-group'>
+         <label htmlFor = "product_stock">Product Stock</label>
+         <input
+         type = "number"
+         id = "stock"
+         name = "stock"
+         value = {formData.stock}
+         onChange={handleChangeStock}
+         className='form-control'
+         required
+         />
+      </div>
+      <div>
+        <button type="submit" className="submit-button" onClick = {updateProduct}>Submit</button>
+      </div>
+    </form>
+  )
+
   return (
+    <>
+    <h1>Add new Product</h1>
     <form className="add-product-form" onSubmit={handleSubmit} encType="multipart/form-data">
       <div className="form-group">
         <label htmlFor="product_name">Product Name:</label>
@@ -158,8 +245,15 @@ const AddProduct = () => {
           required
         />
       </div>
-      <button type="submit" className="submit-button">Submit</button>
+      <div>
+        <button type="submit" className="submit-button">Submit</button>
+      </div>
     </form>
+    <div className="update">
+      <h4>click here to update product stock</h4>
+      <button className='submit-button' onClick = {update_stock}>Update Product</button>
+    </div>
+    </>
   );
 };
 

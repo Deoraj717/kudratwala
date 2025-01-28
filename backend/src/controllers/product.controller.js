@@ -28,7 +28,10 @@ const getProducts = asyncHandler(async(req,res)=>{
             query.plant_type = { $regex: new RegExp(plant_type, 'i') }; // Case-insensitive partial match
         }
         // Fetch products from MongoDB with filters applied
-        const products = await Product.find(query);
+        var start = req.query.page;
+        console.log(start);
+        const products = await Product.find(query).skip(start*10).limit(10);
+
 
         return res.status(200).json(new ApiResponse(200,products,"Products found"));
     }catch (error) {

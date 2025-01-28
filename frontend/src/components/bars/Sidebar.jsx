@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { IconContext } from 'react-icons/lib';
-import { FaShoppingCart, FaUserCircle } from 'react-icons/fa'; // Import cart and profile icons
+import { FaUserCircle } from 'react-icons/fa'; // Import cart and profile icons
 import './navbar.css';
 import logo from '/images/logo.png';
 import SearchBar from '../searchs/searchbar';
+import { userContext } from '../../Context/UserContext.jsx';
 
 const Nav = styled.div`
   height: 80px;
@@ -46,22 +47,22 @@ const CartIcon = styled(Link)`
 
 const NavBar = () => {
   const [sidebar, setSidebar] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Mock authentication state
+  const {login,setLogin} = useContext(userContext);
+  //const [isAuthenticated, setIsAuthenticated] = useState(false); // Mock authentication state
 
   const showSidebar = () => setSidebar(!sidebar);
 
   return (
     <Nav className="nav">
       <IconContext.Provider value={{ color: 'black' }}>
-        <NavIcon to="/" onClick={showSidebar}>
-          <img src={logo} alt="Logo" style={{ height: '50px' }} />
+        <NavIcon to="/" onClick={showSidebar} className = "logo-text">
+          <h2>KudratWala</h2>
         </NavIcon>
         <NavContent>
           <SearchBar />
-          <p style={{ margin: '0 20px', textAlign: 'center' }}>Ask through Experts</p>
         </NavContent>
         <AuthSection>
-          {isAuthenticated ? (
+          {login ? (
             <Link to="/profile">
               <FaUserCircle style={{ fontSize: '24px', color: 'black' }} />
             </Link>
@@ -70,9 +71,6 @@ const NavBar = () => {
               Login
             </Link>
           )}
-          <CartIcon to="/cart">
-            <FaShoppingCart />
-          </CartIcon>
         </AuthSection>
       </IconContext.Provider>
     </Nav>

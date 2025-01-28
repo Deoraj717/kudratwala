@@ -41,8 +41,7 @@ const registerUser = asyncHandler(async(req,res)=>{
         if(!regex_phone.test(phone)){
             throw new ApiError("phone number not valid");
         }
-    
-        //create entry in database
+
         const user = await User.create({
             username:username.toLowerCase(),
             password,
@@ -52,8 +51,6 @@ const registerUser = asyncHandler(async(req,res)=>{
     
         const accessToken = await user.generateAcessToken()
         const refreshToken = await user.generateRefreshToken()
-
-        console.log(accessToken);
     
         user.refreshToken = refreshToken
         await user.save()
@@ -96,7 +93,6 @@ const loginUser = asyncHandler(async(req,res)=>{
                 new ApiError(404,"No user found")
             )
         }
-        console.log(user);
         if(!user.isPasswordCorrect(password)){
             return res.status(404).json(
                 new ApiError("password invalid")
@@ -119,7 +115,6 @@ const loginUser = asyncHandler(async(req,res)=>{
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 7 * 1000,
         });
-        console.log('Response cookies:', res.getHeaders()['set-cookie']);
 
         const user_for_frontend = {
             userName:user.username,
@@ -136,7 +131,8 @@ const loginUser = asyncHandler(async(req,res)=>{
 
 const logOutUser = asyncHandler(async(req,res)=>{
     try{
-        const token = req.cookies['accessToken']
+        console.log(req);
+        const token = req.cookies["accessToken"]
         const userId = getUserIdFromToken(token)
         
         const USER = await User.findById(userId)
@@ -144,10 +140,17 @@ const logOutUser = asyncHandler(async(req,res)=>{
             return res.status(404).json(new ApiResponse(404,{},"No USER found"));
         }
 
-        User.refreshToken = null;
-        await User.save();
-        res.cookie('acccessToken','',{httpOnly: true, sameSite: 'None', maxAge: 0})
-        res.cookie('refreshToken','',{httpOnly: true, sameSite: 'None', maxAge: 0})
+        USER.refreshToken = null;
+        await USER.save();
+        res.cookie('accessToken',null,{
+            httpOnly:true,
+            maxAge: 60 * 60 * 1000//1 hour max age
+        })
+
+        res.cookie("refreshToken", null, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 7 * 1000,
+        });
 
         return res.status(200).json(new ApiResponse(200,{},"logged out successfully"));
 
@@ -157,14 +160,40 @@ const logOutUser = asyncHandler(async(req,res)=>{
     }
 })
 
+const checkSeller = asyncHandler(async(req,res)=>{
+    try{
+        const token = req.cookies['accessToken'];
+        if(!token)return res.status(500).json(
+            new ApiResponse(400,"No seller found")
+        )
+        const userId = await getUserIdFromToken(token);
+        const seller  = await Seller.findOne({user_id:userId});
+        if(seller){
+            return res.status(200).json(new ApiResponse(200,seller,"Seller found"));
+        }else{
+            return res.status(400).json(
+                new ApiResponse(500,"No seller found")
+            )
+        }
+    }catch(err){
+        console.log("No seller found");
+        return res.status(500).json(
+            new ApiResponse(500,"No seller found")
+        )
+    }
+})
+
 const registerSeller = asyncHandler(async(req,res)=>{
     try {
         const token = req.cookies['accessToken'];
         const userId = await getUserIdFromToken(token);
         console.log(req.body)
         const {shop,city,state,pin} = req.body.formData;
-    
-        const seller = await Seller.create({
+        const seller  = await Seller.findOne({user_id:userId});
+        if(seller)return res.status(200).json(
+            new ApiResponse(200,created_seller,"Registration successful")
+        )
+        const new_seller = await Seller.create({
             user_id:userId,
             shop,
             city,
@@ -172,20 +201,24 @@ const registerSeller = asyncHandler(async(req,res)=>{
             pin
         })
     
-        const created_seller = await User.findById(seller.user_id)
+        const created_seller = await Seller.find({user_id:new_seller.user_id});
     
         if(!created_seller){
             throw new ApiError(500,"registration falied");
         }
-    
+        
         return res.status(200).json(
             new ApiResponse(200,created_seller,"Registration successful")
         )
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        return res.status(500).json(
+            new ApiResponse(500,"Internal Server Error")
+        )
     }
 
 })
+
 const getFromCart = asyncHandler(async(req,res)=>{
     try {
         const token = req.cookies['accessToken']
@@ -219,12 +252,19 @@ const getFromCart = asyncHandler(async(req,res)=>{
 })
 
 const getUserOrders = async (req, res) => {
-    const token = req.cookies["accessToken"];
-    const userId = getUserIdFromToken(token);
-
-    const orders = await Order.find({ userId, paymentStatus: 'Paid' }).populate('products.productId');
-    res.status(200).json(orders);
+    try {
+        const token = req.cookies["accessToken"];
+        console.log("YES");
+        const userId = getUserIdFromToken(token);
+        const orders = await Order.find({ userId,paymentStatus:"paid"});
+        orders.forEach(order => console.log(order));    
+        if(!orders)res.status(200).json({message:"No Orders found"});
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({message:"internal server error"})
+        console.log(error);
+    }
 };
 
 
-export {getFromCart,registerSeller,registerUser,loginUser,logOutUser,getUserOrders};
+export {checkSeller,getFromCart,registerSeller,registerUser,loginUser,logOutUser,getUserOrders};

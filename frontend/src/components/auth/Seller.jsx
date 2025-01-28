@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Seller.css';
 
 function Seller() {
 
@@ -36,6 +37,7 @@ function Seller() {
   return (
     <div className='auth-container'>
       <div className="auth-box">
+        <h1>Register for seller</h1>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Shop name</label>

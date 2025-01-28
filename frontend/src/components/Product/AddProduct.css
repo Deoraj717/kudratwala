@@ -17,6 +17,11 @@
     font-weight: 100;
     font-style: normal;
   }
+
+  .form-group-button{
+    display: flex;
+    gap:2rem;
+  }
   
   label {
     display: block;
@@ -45,6 +50,8 @@
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    display: block;
+    margin: .5rem auto;
   }
   
   .submit-button:hover {
@@ -54,6 +61,11 @@
   .textarea {
     height: 100px;
     resize: vertical;
+  }
+
+  .update{
+    width:max-content;
+    margin: 2rem auto;
   }
   
   

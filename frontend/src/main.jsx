@@ -20,6 +20,9 @@ import About from './components/About/About.jsx';
 import AuthPage from './components/auth/authPage.jsx'
 import {ProductProvider} from './Context/ProductContext.jsx';
 import ReviewPage from './components/Product/ProductPage/ReviewPage.jsx';
+import Error from './components/Error.jsx';
+import { UserContextProvider } from './Context/UserContext.jsx';
+import Profile from './components/User/Profile.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +35,8 @@ const router = createBrowserRouter(
       <Route path = "/seller" element = {<Seller/>}/>
       <Route path = "/about" element = {<About/>}/>
       <Route path  = "/cart" element = {<Cart/>}/>
+      <Route path = "/error" element = {<Error/>}/>
+      <Route path = "/profile" element = {<Profile/>}/>
       {/* <Route path ="/BlogData" element={<BlogData/>}/> */}
       <Route path = "/products" element = {<ProductPage/>}/>
       <Route path = "/products/:id" element = {<ProductFrontPage/>}>
@@ -47,7 +52,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ProductProvider>
+    <UserContextProvider>
     <RouterProvider router = {router}/>
+    </UserContextProvider>
     </ProductProvider>
   </React.StrictMode>,
 )

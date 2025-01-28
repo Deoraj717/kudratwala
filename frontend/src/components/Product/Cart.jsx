@@ -28,25 +28,6 @@ function Cart() {
         }
         getProducts();
     },[]);
-    
-    // useEffect(()=>{
-    //     const getProductDetails = async()=>{
-    //         try {
-    //             console.log(products)
-    //             const product_details = productIds.map(id=>axios.get(url));
-    //             const responses = await Promise.all(product_details);
-    //             const productsData = responses.map(res => res.data);
-    //             setProducts(productsData);
-    //             const products_in_cart = await Promise.all(product_details);
-    //             setProductIds(products_in_cart);
-    //         } catch (error) {
-    //             console.log(error);
-    //             if(error.status === 401)navigate("/login");
-    //         }
-    //     }
-    //     getProductDetails();
-    //     setLoading(false);
-    // },[]);
 
     const buyNow = async()=>{
 
@@ -59,7 +40,8 @@ function Cart() {
     
             const res1 = await axios.get(`${backendUrl}/getkey`,{withCredentials:true})
             const key = res1.data.key;
-            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount,products},{withCredentials:true})
+            console.log(products);    
+            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount,products:products},{withCredentials:true})
             const order = res2.data.order
             const user = await axios.get(`${backendUrl}/getName`,{withCredentials:true})
     

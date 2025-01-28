@@ -38,15 +38,9 @@ function ProductFrontPage() {
     const checkoutHandler = async (amount)=>{
         try {
 
-            const products = {
-                productId:product_._id,
-                quantity,
-                price:product_.price
-            }
-
             const res1 = await axios.get(`${backendUrl}/getkey`,{withCredentials:true})
             const key = res1.data.key;
-            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount:amount*products.quantity,products},{withCredentials:true})
+            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount:amount*quantity,products:product_},{withCredentials:true})
             const order = res2.data.order
             const user = await axios.get(`${backendUrl}/getName`,{withCredentials:true})
             const data = {
@@ -80,7 +74,7 @@ function ProductFrontPage() {
             navigate("/");
         } catch (error) {
             console.log(error);
-            navigate("/error_page");
+            navigate("/error");
         }
 
     }
@@ -131,7 +125,7 @@ function ProductFrontPage() {
                     </p>
                 </div>
                 <div className="product-quantity">
-                    Quantity : 
+                    Insert Quantity : 
                     <input
                         id="quantity"
                         type="text"
@@ -139,11 +133,11 @@ function ProductFrontPage() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="product-front-page-add-to-cart button">
-                    <button onClick = {AddToCart}>{msg}{!isAdded && <FaShoppingCart className="product-front-page-cart-icon" />}</button>
+                <div>
+                    <button className="product-front-page-button" onClick = {AddToCart}>{msg}{!isAdded && <FaShoppingCart className="product-front-page-cart-icon" />}</button>
                 </div>
-                <div className="product-front-page-wishlist button">
-                    <button onClick = {()=>checkoutHandler(product_.price)}>Buy Now<FaHeart className='product-front-page-cart-icon'/></button>
+                <div>
+                    <button className="product-front-page-button" onClick = {()=>checkoutHandler(product_.price)}>Buy Now<FaHeart className='product-front-page-cart-icon'/></button>
                 </div>
             </div>
         </div>

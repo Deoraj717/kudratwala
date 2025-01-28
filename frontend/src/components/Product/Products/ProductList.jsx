@@ -1,5 +1,6 @@
 // ProductList.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './ProductList.css';
 
 const ProductList = ({ products, view }) => {
@@ -8,6 +9,7 @@ const ProductList = ({ products, view }) => {
       {products.length > 0 ? (
         products.map((product) => (
           <div key={product.id} className="product">
+            <Link to = {`${product._id}`} className='link'>
             <div className='product-ims'>
             <img src={product.image} alt={product.name} className="product-page-product-image" />
             </div>
@@ -17,6 +19,7 @@ const ProductList = ({ products, view }) => {
               <h4>Price: ${product.price}</h4>
               <button className="add-to-cart">Add to Cart</button>
             </div>
+            </Link>
           </div>
         ))
       ) : (

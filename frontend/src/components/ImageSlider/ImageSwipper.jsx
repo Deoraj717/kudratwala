@@ -39,18 +39,13 @@ function ImageSwipper() {
   const swiperSlides = products.map((product)=>{
     return (
         <SwiperSlide className = "slider-swiper">
+          <Link to = {`products/${product._id}`}>
             <div className='slider-main-container'>
-              <div className="img">
+              <div className="image-swipper">
                 <img src={`${product.image}`} alt="product"/>
               </div>
-              <Link to  = {`/products/${product.id}`} className="link">
-              <div className="plant-details-container">
-                <div className="swiper-plant-details">
-                  <h1>{product.name}</h1>
-                </div>
-              </div>
-              </Link>
             </div>
+            </Link>
         </SwiperSlide>
     )
   })

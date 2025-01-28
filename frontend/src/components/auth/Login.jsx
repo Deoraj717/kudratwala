@@ -1,10 +1,13 @@
 // src/components/Login.js
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css'; // Import the custom CSS file
 import axios from 'axios';
+import { userContext } from '../../Context/UserContext.jsx';
+
 
 const login = () => {
+  const user = useContext(userContext);
   const navigate = useNavigate()
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   
@@ -23,7 +26,10 @@ const login = () => {
       e.preventDefault();
       const url = `${backendUrl}/users/login`
       const res = await axios.post(url,formData,{withCredentials:true});
-      if(res.status==200)navigate("/");
+      if(res.status==200){
+        user.setLogin(true);
+        navigate("/");
+      }
     } catch (error) {
       console.log(error);
     }

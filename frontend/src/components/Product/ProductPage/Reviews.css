@@ -1,0 +1,15 @@
+.review-details{
+    display: flex;
+    flex-direction: column;
+    gap:.5rem;
+    font-family: "Bebas Neue", serif;
+    font-style: normal;
+    font-size: large;
+    color:black;
+}
+.reviewer{
+    margin-right:1rem;
+}
+.particular-review{
+    margin-bottom:2rem;
+}

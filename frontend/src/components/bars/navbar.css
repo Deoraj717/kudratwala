@@ -100,3 +100,9 @@
         padding: 0 100px;
     }
 }
+.logo-text {
+    font-family: "Rubik Gemstones", serif;
+    font-weight: 200;
+    font-style: normal;  
+    text-decoration:none;
+  }

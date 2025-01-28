@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState,useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '/images/logo.png';
 import './sidebar.css'; // Ensure to include your CSS styles
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUser, faCog, faAnchor, faChartLine, faChevronRight, faChevronLeft, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { userContext } from '../../Context/UserContext';
+import { FaShoppingCart } from 'react-icons/fa';
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const {login,setLogin} = useContext(userContext);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  const logOut = async ()=>{
+    try{
+      const url = `${backendUrl}/users/logout`;
+      const res = await axios.get(url,{withCredentials:true});
+      if(res){
+        setLogin(false);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const toggleDropdown = (index) => {
     setActiveDropdown(activeDropdown === index ? null : index);
@@ -42,33 +61,24 @@ const Sidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/seller" className="nav-item">
+          <Link to="/sell" className="nav-item">
             <span className="nav-icon"><FontAwesomeIcon icon={faChartLine} /></span>
             <span>Sell</span>
           </Link>
         </li>
-        <li className={`dropdown ${activeDropdown === 0 ? 'active' : ''}`}>
-          <Link to="#" className="nav-item dropdown-toggle" onClick={() => toggleDropdown(0)}>
-            <div>
-              <span className="nav-icon"><FontAwesomeIcon icon={faCog} /></span>
-              <span>Settings</span>
-            </div>
-            <FontAwesomeIcon icon={activeDropdown === 0 ? 'fa-chevron-down' : 'fa-chevron-right'} className="dropdown-icon" />
+        <li>
+          {login && <button className="nav-item" onClick = {logOut}>
+            <span className="nav-icon"><FontAwesomeIcon icon={faSignOutAlt} /></span>
+            <span>Logout</span>
+          </button>}
+        </li>
+        <li>
+          <Link to="/cart" className="nav-item">
+            <span className="nav-icon"><FaShoppingCart /></span>
+            <span>Cart</span>
           </Link>
-          <ul className="dropdown-menu">
-            <li><Link to="/settings/general" className="dropdown-item">General</Link></li>
-            <li><Link to="/settings/privacy" className="dropdown-item">Privacy</Link></li>
-            <li><Link to="/settings/notifications" className="dropdown-item">Notifications</Link></li>
-          </ul>
         </li>
       </ul>
-
-      <div className="logout">
-        <Link to="/logout" className="nav-item">
-          <span className="nav-icon"><FontAwesomeIcon icon={faSignOutAlt} /></span>
-          <span>Logout</span>
-        </Link>
-      </div>
     </div>
   );
 };

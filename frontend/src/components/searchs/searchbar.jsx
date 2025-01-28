@@ -72,7 +72,7 @@ const SearchBar = () => {
                 placeholder="Search for products..."
                 value={query}
                 onChange={handleChange}
-                onKeyDown={handleKeyDown} // Handle keyboard navigation
+                onKeyDown={handleKeyDown}
                 className="search-input"
             />
             <FaSearch className="search-icon" />

@@ -5,17 +5,14 @@ import axios from 'axios';
 
 import "./ReviewPage.css";
 
-function ReviewPage() {//get product id as a prop
+function ReviewPage() {
 
 
   const {product_} = useContext(ProductContext);
   if (!product_) {
     return <div>Loading product details...</div>;
   }
-  const id = product_._id;
-  console.log(product_)
-
-  const navigate = useNavigate()
+  const id = product_._id;  
 
   const [formData,setFormData] = useState({
     userName:'',
@@ -42,16 +39,15 @@ function ReviewPage() {//get product id as a prop
             rating: formData.reviews.rating,
             description: formData.reviews.description,
           },
-          productId: id,
         };
         console.log(payload);
 
         const res = await axios.post(url,payload,{withCredentials:true});
         console.log(res);
-        setRes("Reviewe added");
+        setRes("Review added");
 
         setTimeout(()=>{
-          navigate(-1);
+          setRes("");
         },2000);
 
       } catch (error) {

@@ -234,8 +234,14 @@ body {
   .logout .nav-item {
     display: flex;
     align-items: center;
+    cursor: pointer;
+  }
+  .nav-item{
+    border: none;
+    background-color: inherit;
   }
   
   .logout .nav-icon {
     margin-right: 90px;
   }
+

@@ -10,6 +10,17 @@ const getReview = asyncHandler(async(req,res)=>{
         const id = req.query.id;
         console.log(id);
         const reviews = await Review.find({"product_id":new mongoose.Types.ObjectId(id)});
+        const avg_review = await Review.aggregate([
+            {
+              $match: { product_id: new mongoose.Types.ObjectId(id) }
+            },
+            {
+              $group: {
+                _id: null,
+                averageRating: { $avg: "$rating" }
+              }
+            }
+          ]);
         console.log(reviews);
         if(!reviews){
             return res.status(500).json(
@@ -18,7 +29,7 @@ const getReview = asyncHandler(async(req,res)=>{
         }
 
         return res.status(200).json(
-            new ApiResponse(200,reviews,"Reviews Found")
+            new ApiResponse(200,{reviews,avg_review},"Reviews Found")
         )
     }catch(err){
         console.log(err);
