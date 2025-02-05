@@ -17,22 +17,16 @@ function stripNonNumbers(input) {
 const getProducts = asyncHandler(async(req,res)=>{
     try {
         const filter = req.query.filter ? req.query.filter : {};
-        const {area,plant_type} = filter;
-    
+        const {category,priceRange} = filter;
         let query = {};
-    
-        if (area) {
-            query.area = { $regex: new RegExp(area, 'i') }; // Case-insensitive partial match
+        if (category && category!='All') {
+            query.plant_type = category;
         }
-        if (plant_type) {
-            query.plant_type = { $regex: new RegExp(plant_type, 'i') }; // Case-insensitive partial match
+        if (priceRange) {
+            query.price = {$gte:Number(priceRange[0]),$lte:Number(priceRange[1])};
         }
-        // Fetch products from MongoDB with filters applied
         var start = req.query.page;
-        console.log(start);
         const products = await Product.find(query).skip(start*10).limit(10);
-
-
         return res.status(200).json(new ApiResponse(200,products,"Products found"));
     }catch (error) {
         console.log(error);

@@ -18,13 +18,18 @@
     const prevpage = ()=>{
       setPage((old)=>old>0?old-1:0)
     }
+
+    const [filter, setFilter] = useState({
+      category: 'All',
+      priceRange: [0, 1000],
+    });
     useEffect(()=>{
       const getProducts = async()=>{
         try{
           setLoading(true)
           const res = await axios.get(`${backendUrl}/products/getproducts`,{
             params:{
-              page
+              page,filter
             }
           });
           console.log(res);
@@ -35,25 +40,13 @@
         }
       }
       getProducts();
-    },[page]);
-
-    const [filter, setFilter] = useState({
-      category: 'All',
-      priceRange: [0, 1000],
-    });
-    const [view, setView] = useState('grid'); // Added state for view type
+    },[page,filter]);
 
     if(loading == true)return <h1>loading</h1>
-
-    const filteredProducts = products.filter((product) => {
-      const inCategory = filter.category === 'All' || product.category === filter.category;
-      const inPriceRange = product.price >= filter.priceRange[0] && product.price <= filter.priceRange[1];
-      return inCategory && inPriceRange;
-    });
     return (
       <div className="product-page">
-        <ProductFilter filter={filter} setFilter={setFilter} view={view} setView={setView} />
-        <ProductList products={filteredProducts} view={view} />
+        <ProductFilter filter={filter} setFilter={setFilter}/>
+        <div className = "product-catalogue">{products.map((product)=>{return <ProductList product = {product}/>})}</div>
         <button className='button-products' onClick = {nextpage}>next-Page</button>
         {page !=0 && <button className='button-products' onClick = {prevpage}>Prev Page</button>}
       </div>

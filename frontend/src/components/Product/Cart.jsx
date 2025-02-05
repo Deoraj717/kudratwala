@@ -80,20 +80,20 @@ function Cart() {
 
     const removeProduct = async(product_id)=>{//remove from cart
         try {
+            console.log("entering delete module")
             const url = `${backendUrl}/cart/remove`;
-            const res = await axios.post(url,{_id:product_id},{withCredentials:true});
-            setProducts(res.data);
+            const res = await axios.post(url,{productId:product_id},{withCredentials:true});
+            const updatedCart = await axios.get(`${backendUrl}/users/getCart`, { withCredentials: true });
+            setProducts(updatedCart.data.data);
         } catch (error) {
-            if(error.status == 404){
-                navigate("/login");
-            }
+            console.log(error);
         }
     }
 
     if(products && products.length === 0)return <h1>No Products in your cart</h1>
     return (
         <div className="cart-container">
-            {products.map(product=>(
+            {products && products.map(product=>(
                 <div className = "single-product-cart">
                     <div className="cart-product-image">
                         <Link to = {`/products/${product._id}`}><img src = {product.img}/></Link>

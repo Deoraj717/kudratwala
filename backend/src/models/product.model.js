@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
         type:String
     },
     plant_type:{
-        type:String
+        type:String 
     },
     area:{
         type:String

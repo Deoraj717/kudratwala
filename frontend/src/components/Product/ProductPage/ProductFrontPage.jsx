@@ -6,6 +6,7 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import ProductDesc from './ProductDesc';
 import {ProductContext} from "../../../Context/ProductContext.jsx";
 import axios from 'axios';
+import { AddToCart } from '../../../utils/add-to-cart.js';
 
 function ProductFrontPage() {
 
@@ -78,26 +79,12 @@ function ProductFrontPage() {
         }
 
     }
-
-    const AddToCart = async()=>{
-        try {
-            const url = `${backendUrl}/cart/add`;
-            console.log(url);
-            const res = await axios.post(url,{_id:product_._id,price:product_.price,quantity}, { withCredentials: true });
-            console.log(res);
-            if(res.status==200){
-                setMsg("Product added to cart")
-                setIsAdded(true);
-                setTimeout(()=>{
-                    setMsg("Add To Cart")
-                    setIsAdded(false);
-                },3000)
-            }
-            if(res.status == 404)navigate("/login");
-        } catch (error) {
-            console.log(error);
-        }
+    const product = {
+        id:product_.id,
+        price:product_.price,
+        quantity:quantity
     }
+    AddToCart(product)
 
     const handleChange = (event) => {
         const value = event.target.value;
@@ -108,7 +95,15 @@ function ProductFrontPage() {
 
     if(!product_)return <h1>Loading...</h1>
 
-
+    const handleCart = () => {
+        if (!product_) return;
+        const product = {
+            _id: product_._id,
+            price: product_.price,
+            quantity: quantity
+        };
+        AddToCart(product, setMsg, setIsAdded, navigate);
+    };
 
   return (
     <div className='product-front-page-Container'>
@@ -134,7 +129,7 @@ function ProductFrontPage() {
                     />
                 </div>
                 <div>
-                    <button className="product-front-page-button" onClick = {AddToCart}>{msg}{!isAdded && <FaShoppingCart className="product-front-page-cart-icon" />}</button>
+                    <button className="product-front-page-button" onClick = {handleCart}>{msg}{!isAdded && <FaShoppingCart className="product-front-page-cart-icon" />}</button>
                 </div>
                 <div>
                     <button className="product-front-page-button" onClick = {()=>checkoutHandler(product_.price)}>Buy Now<FaHeart className='product-front-page-cart-icon'/></button>

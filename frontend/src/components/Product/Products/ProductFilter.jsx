@@ -2,7 +2,7 @@
 import React from 'react';
 import './ProductFilter.css';
 
-const ProductFilter = ({ filter, setFilter, view, setView }) => {
+const ProductFilter = ({ filter, setFilter}) => {
   const handleCategoryChange = (e) => {
     setFilter((prev) => ({
       ...prev,
@@ -18,20 +18,18 @@ const ProductFilter = ({ filter, setFilter, view, setView }) => {
     }));
   };
 
-  const handleViewChange = (e) => {
-    setView(e.target.value);
-  };
-
   return (
     <div className="filter">
-      <div className="filter-controls">
         <label>
           Category:
           <select className='cat' value={filter.category} onChange={handleCategoryChange}>
             <option value="All">All</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Home Appliances">Home Appliances</option>
+            <option value="herb">Herbs</option>
+            <option value="flower">Flowers</option>
+            <option value="leaves">Leaves</option>
+            <option value="indoor">indoor</option>
+            <option value="outdoor">outdoor</option>
+            <option value="seed">seeds</option>
           </select>
         </label>
         <label>
@@ -43,14 +41,6 @@ const ProductFilter = ({ filter, setFilter, view, setView }) => {
             <option value={[500, 1000]}>500 - 1000</option>
           </select>
         </label>
-        {/* <label>
-          View:
-          <select className='view' value={view} onChange={handleViewChange}>
-            <option value="grid">Grid</option>
-            <option value="list">List</option>
-          </select>
-        </label> */}
-      </div>
     </div>
   );
 };

@@ -54,8 +54,9 @@ const addToCart = asyncHandler(async (req, res) => {
 
 const removeFromCart = asyncHandler(async(req,res)=>{
   try {
+    console.log(req.body);
     const { productId } = req.body;
-
+    console.log(productId);
     // Find the user
     const token = req.cookies['accessToken'];
     const userId = getUserIdFromToken(token);
@@ -64,29 +65,29 @@ const removeFromCart = asyncHandler(async(req,res)=>{
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Find the cart item
-    
     console.log(user.cart);
-    const cartItem = user.cart.find(item => item._id === productId);
+    const cartItem = user.cart.find(item => item._id.toString() === productId);
+
+    console.log(cartItem);
     if (!cartItem) {
       return res.status(400).json({ error: 'Product not found' });
     }
 
     // Find the product by ID to restore the stock
-    const product = await Product.findById(productId);
-    console.log("YES");
+    const product = await Product.findById(cartItem._id);
+    console.log(product);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
 
     // Restore the stock
-    for(item in cartItem)product.stock += item.quantity;
+    product.stock += cartItem.quantity;
 
     console.log("YES");
 
     // Remove the product from the cart
-    user.cart = user.cart.filter(item => item._id !== productId);
-
+    user.cart = user.cart.filter(item => item._id.toString() !== productId);
+    console.log(user.cart)
     // Save the updated product and user
     await product.save();
     await user.save();
