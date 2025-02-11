@@ -24,13 +24,17 @@ const OrderSchema = new mongoose.Schema({
             },
             img:{
                 type:String
-            }
-        }
+            },
+        },
     ],
     razorpayOrderId:String,
     paymentStatus:{
         type:String,
         default:"pending"
+    },
+    flag:{
+        type:Boolean,
+        default:0
     }
 },{
     timestamps : true

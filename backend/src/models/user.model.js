@@ -10,13 +10,11 @@ const userSchema = new mongoose.Schema(
             type : String,
             required : true,
             unique : true,
-            validate:{
-                validator:function(username){
-                    const usernameRegex = /^[A-Za-z]+$/;
-                    return usernameRegex.test(username);
-                },
-                message:props=>`${props.value} is not a valid username`
-            }
+        },
+        address:{
+            city:{type:String,required:true},
+            state:{type:String,required:true},
+            pin:{type:String,required:true}
         },
         password:{
             type : String,

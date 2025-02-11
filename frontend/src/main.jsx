@@ -23,6 +23,7 @@ import ReviewPage from './components/Product/ProductPage/ReviewPage.jsx';
 import Error from './components/Error.jsx';
 import { UserContextProvider } from './Context/UserContext.jsx';
 import Profile from './components/User/Profile.jsx';
+import Update from './components/auth/Update.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,11 +33,13 @@ const router = createBrowserRouter(
       <Route path= "/auth" element={<AuthPage />} />
       <Route path = "/login" element = {<Login/>}/>
       <Route path = "/register" element = {<Register/>}/>
+      <Route path = "/update" element = {<Update/>}/>
       <Route path = "/seller" element = {<Seller/>}/>
       <Route path = "/about" element = {<About/>}/>
       <Route path  = "/cart" element = {<Cart/>}/>
       <Route path = "/error" element = {<Error/>}/>
       <Route path = "/profile" element = {<Profile/>}/>
+      {/* <Route path  = "/payments/paymentverification" element = {<CheckPayment/>}/> */}
       {/* <Route path ="/BlogData" element={<BlogData/>}/> */}
       <Route path = "/products" element = {<ProductPage/>}/>
       <Route path = "/products/:id" element = {<ProductFrontPage/>}>

@@ -7,18 +7,12 @@ import Seller from "../models/seller.model.js";
 import Product from "../models/product.model.js";
 import Order from "../models/order.model.js";
 
-const registerUser = asyncHandler(async(req,res)=>{
+const registerUser = asyncHandler(async(req,res,next)=>{
     try {
         console.log("registration started");
     
-        const {username,password,email,phone} = req.body;
+        const {username,password,email,phone,address} = req.body;
         console.log(req.body);
-    
-        //validate
-        const regex_name = /^(?=.*[A-Za-z])[A-Za-z\s]+$/;
-        if(!regex_name.test(username)){
-            throw new ApiError("username not correct");
-        }
     
         if(!password||password.length<8){
             throw new ApiError(400,"password length must be atleast 8");
@@ -29,17 +23,17 @@ const registerUser = asyncHandler(async(req,res)=>{
         });
     
         if(existing_user){
-            throw new ApiError("user already exists");
+            throw new ApiError(400,"user already exists");
         }
     
         const regex_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!regex_email.test(email)){
-            throw new ApiError("email not correct");
+            throw new ApiError(400,"email not correct");
         }
     
         const regex_phone = /^\d{10}$/;
         if(!regex_phone.test(phone)){
-            throw new ApiError("phone number not valid");
+            throw new ApiError(400,"phone number not valid");
         }
 
         const user = await User.create({
@@ -47,6 +41,7 @@ const registerUser = asyncHandler(async(req,res)=>{
             password,
             email,
             phone,
+            address
         })
     
         const accessToken = await user.generateAcessToken()
@@ -75,10 +70,11 @@ const registerUser = asyncHandler(async(req,res)=>{
         }
     
         return res.status(200).json(
-            new ApiResponse(200,created_user,"Registration successful")
+            "Registration successful"
         )
     } catch (error) {
         console.log(error);
+        next(error);
     }
 })
 
@@ -93,9 +89,11 @@ const loginUser = asyncHandler(async(req,res)=>{
                 new ApiError(404,"No user found")
             )
         }
-        if(!user.isPasswordCorrect(password)){
-            return res.status(404).json(
-                new ApiError("password invalid")
+        const iscorrect = await user.isPasswordCorrect(password);
+
+        if(!iscorrect){
+            return res.status(400).json(
+                new ApiError(400,"Incorrect Password")
             )
         }
     
@@ -127,6 +125,19 @@ const loginUser = asyncHandler(async(req,res)=>{
         console.log(error)
     }
     
+})
+
+const getUser = asyncHandler(async(req,res)=>{
+    try {
+        const token = req.cookies["accessToken"]
+        const userId = getUserIdFromToken(token);
+        const user = await User.findById(userId);
+        if(user)return res.status(200).json(user);
+        else throw new ApiError(404,"No user Found")
+    } catch (error) {
+        return res.status(404).json("No user found");
+        next(error);
+    }
 })
 
 const logOutUser = asyncHandler(async(req,res)=>{
@@ -171,15 +182,11 @@ const checkSeller = asyncHandler(async(req,res)=>{
         if(seller){
             return res.status(200).json(new ApiResponse(200,seller,"Seller found"));
         }else{
-            return res.status(400).json(
-                new ApiResponse(500,"No seller found")
-            )
+            throw new ApiError(404,"No seller found");
         }
     }catch(err){
         console.log("No seller found");
-        return res.status(500).json(
-            new ApiResponse(500,"No seller found")
-        )
+        next(err);
     }
 })
 
@@ -212,9 +219,7 @@ const registerSeller = asyncHandler(async(req,res)=>{
         )
     } catch (error) {
         console.log(error);
-        return res.status(500).json(
-            new ApiResponse(500,"Internal Server Error")
-        )
+        next(error);
     }
 
 })
@@ -228,7 +233,7 @@ const getFromCart = asyncHandler(async(req,res)=>{
     
         const USER = await User.findById(userId)
         if(!USER){
-            return res.status(404).json(new ApiResponse(404,{},"No USER found"));
+            throw new ApiError(404,"No user found");
         }
         const cartItems = USER.cart
         console.log(cartItems)
@@ -242,12 +247,12 @@ const getFromCart = asyncHandler(async(req,res)=>{
         console.log(updatedCart)
 
         if(!cartItems){
-            return res.status(200).json(new ApiResponse(200,{},"No products in your cart"));
+            throw new ApiError(404,"No items in your cart");
         }
         return res.status(200).json(new ApiResponse(200,updatedCart,"Cart items found"));
     } catch (error) {
         console.log(error)
-        return res.status(500).json(new ApiResponse(500,"Internal server error hai"));
+        next(error);
     }
 })
 
@@ -258,13 +263,41 @@ const getUserOrders = async (req, res) => {
         const userId = getUserIdFromToken(token);
         const orders = await Order.find({ userId,paymentStatus:"paid"});
         orders.forEach(order => console.log(order));    
-        if(!orders)res.status(200).json({message:"No Orders found"});
+        if(!orders)throw new ApiError(404,"No orders found");
         res.status(200).json(orders);
     } catch (error) {
-        res.status(500).json({message:"internal server error"})
         console.log(error);
+        next(error);
     }
 };
 
+const update = async(req,res)=>{
+    try {
+        const token = req.cookies["accessToken"];
+        const userId = getUserIdFromToken(token);
+        const updates = req.body;
+        const req_updates = {};
+        if(!userId)throw new ApiError(404,"No user found");
+        const user = await User.findById(userId);
+        Object.keys(updates).forEach(key=>{
+            if(updates[key]!=''){
+                req_updates[key] = updates[key];
+            }
+        })
+    
+        if(Object.keys(req_updates).length>0){
+            const updated_user = await User.findByIdAndUpdate(
+                userId,
+                {$set:req_updates},
+                {new:true}
+            );
+            return res.status(200).json(updated_user);
+        }else{
+            return res.status(200).json("Updated");
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-export {checkSeller,getFromCart,registerSeller,registerUser,loginUser,logOutUser,getUserOrders};
+export {update,getUser,checkSeller,getFromCart,registerSeller,registerUser,loginUser,logOutUser,getUserOrders};

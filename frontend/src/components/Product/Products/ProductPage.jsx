@@ -16,7 +16,7 @@
       setPage((old)=> old+1);
     }
     const prevpage = ()=>{
-      setPage((old)=>old>0?old-1:0)
+      setPage((old)=>old>0?old-1:0);
     }
 
     const [filter, setFilter] = useState({
@@ -45,7 +45,7 @@
     if(loading == true)return <h1>loading</h1>
     return (
       <div className="product-page">
-        <ProductFilter filter={filter} setFilter={setFilter}/>
+        <ProductFilter filter={filter} setFilter={setFilter} setPage = {setPage}/>
         <div className = "product-catalogue">{products.map((product)=>{return <ProductList product = {product}/>})}</div>
         <button className='button-products' onClick = {nextpage}>next-Page</button>
         {page !=0 && <button className='button-products' onClick = {prevpage}>Prev Page</button>}

@@ -94,12 +94,12 @@ const Authentication = () => {
       </Left>
       <Right>
         <Side src={SideImage} alt="Side Decoration" />
-        {!login ? (
+        {login ? (
           <>
             <SignUp />
             <Text>
             Already have an account?{" "}
-              <TextButton onClick={() => setLogin(true)}>Sign In</TextButton>
+              <TextButton onClick={() => setLogin(false)}>Sign In</TextButton>
             </Text>
           </>
         ) : (
@@ -107,7 +107,7 @@ const Authentication = () => {
             <SignIn />
             <Text>
             Don't have an account?{" "}
-              <TextButton onClick={() => setLogin(false)}>Sign Up</TextButton>
+              <TextButton onClick={() => setLogin(true)}>Sign Up</TextButton>
             </Text>
           </>
         )}

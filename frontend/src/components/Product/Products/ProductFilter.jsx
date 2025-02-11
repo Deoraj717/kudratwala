@@ -2,12 +2,13 @@
 import React from 'react';
 import './ProductFilter.css';
 
-const ProductFilter = ({ filter, setFilter}) => {
+const ProductFilter = ({ filter, setFilter, setPage}) => {
   const handleCategoryChange = (e) => {
     setFilter((prev) => ({
       ...prev,
       category: e.target.value,
     }));
+    setPage(0);
   };
 
   const handlePriceRangeChange = (e) => {
@@ -16,6 +17,7 @@ const ProductFilter = ({ filter, setFilter}) => {
       ...prev,
       priceRange: value,
     }));
+    setPage(0);
   };
 
   return (

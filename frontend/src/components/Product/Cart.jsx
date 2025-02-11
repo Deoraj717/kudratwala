@@ -10,7 +10,6 @@ function Cart() {
 
     const navigate = useNavigate();
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    // const [productIds,setProductIds] = useState([]);
     const [products,setProducts] = useState([]);
     const [loading,setLoading] = useState(true);
 
@@ -92,6 +91,8 @@ function Cart() {
 
     if(products && products.length === 0)return <h1>No Products in your cart</h1>
     return (
+        <div className = "cart-page">
+            <div className="blurred-background-cart"></div> 
         <div className="cart-container">
             {products && products.map(product=>(
                 <div className = "single-product-cart">
@@ -109,6 +110,7 @@ function Cart() {
                 </div>
             ))}
             <button className='buy-button' onClick = {buyNow}>buy now</button>
+        </div>
         </div>
     )
 }

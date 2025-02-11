@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { getUserIdFromToken } from "../utils/getUserId.js";
 import Order from "../models/order.model.js";
 import User from "../models/user.model.js";
+import sendEmail from "../utils/SendMail.js";
 
 export const checkout = async (req,res)=>{
 
@@ -12,7 +13,7 @@ export const checkout = async (req,res)=>{
      const userId = getUserIdFromToken(token);
      const user = await User.findById(userId);
      if(!user){
-        return res.status(200).json({message:"No user Found",redirectUrl:"/login"});
+        return res.status(200).json({message:"No user Found"});
      }
      const products = req.body.products;
      console.log(products);
@@ -27,11 +28,10 @@ export const checkout = async (req,res)=>{
      console.log(products);
      const newOrder = await Order.create({
          userId,
-         products:products,
+         products,
          razorpayOrderId:order.id,
          paymentStatus:"pending"
-     })
-     console.log("JJJJooooo");  
+     }) 
      console.log(newOrder);
      await newOrder.save();
  
@@ -54,7 +54,7 @@ export const verifypayment = async(req,res)=>{
             const order = Order.findOne({razorpayOrderId:razorpay_order_id});
             order.paymentStatus = "paid";
             await order.save();
-            res.status(200).json({message:"payment Success",redirectUrl:"/"});
+            res.status(200).json({message:"payment Success"});
         }else{
             res.status(500).json({message:"Invalid signature"});
         }
@@ -85,7 +85,7 @@ export const paymentVerification = async(req,res)=>{
         if(expectedSignature === razorpay_signature){
             response = {"signatureIsValid":"true"}
         }
-    
+        
         if(isAuthentic){
             const order = await Order.findOne({razorpayOrderId:razorpay_order_id});
             if(!order){
@@ -94,11 +94,10 @@ export const paymentVerification = async(req,res)=>{
             console.log(order);
             order.paymentStatus = "paid";
             await order.save();
-
-            user.cart = []
+            if(order.flag == 1)user.cart = [];
             await user.save();
-
-            res.status(200).json({message:"payment Success",redirectUrl:"/"});
+            sendEmail({user:user.username,state:user.address.state,city:user.address.city,pin:user.address.pin},order);
+            res.status(200).redirect(process.env.FRONT_URL);
         }else{
             res.status(400).json({message:"Cant verify the payment"});
         }

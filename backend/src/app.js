@@ -35,6 +35,16 @@ app.use("/products", productRouter);
 app.use("/payments",paymentRoute);
 app.use("/cart",passport.authenticate('jwt',{session:false}) ,cartRouter);
 app.use("/review",reviewRouter);
+app.use((err, req, res, next) => {
+    if (err instanceof ApiError) {
+        return res.status(err.statuscode).json({
+            success: err.success,
+            message: err.message,
+            errors: err.errors
+        });
+    }
+    res.status(500).json({ message: "Internal Server Error" });
+});
 
 app.get("/getkey",async(req,res)=>{
     try {

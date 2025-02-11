@@ -36,12 +36,22 @@ function ProductFrontPage() {
         getProduct();
     },[])
 
-    const checkoutHandler = async (amount)=>{
+    const checkoutHandler = async (amount,e)=>{
+        e.preventDefault();
         try {
+            console.log(product_);
+            const product = {
+                productId:product_.id,
+                name:product_.product_name,
+                quantity:1,
+                img:product_.image,
+                price:product_.price,
+                flag:1
+            }
 
             const res1 = await axios.get(`${backendUrl}/getkey`,{withCredentials:true})
             const key = res1.data.key;
-            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount:amount*quantity,products:product_},{withCredentials:true})
+            const res2 = await axios.post(`${backendUrl}/payments/checkout`,{amount:amount*quantity,products:product},{withCredentials:true})
             const order = res2.data.order
             const user = await axios.get(`${backendUrl}/getName`,{withCredentials:true})
             const data = {
@@ -79,12 +89,6 @@ function ProductFrontPage() {
         }
 
     }
-    const product = {
-        id:product_.id,
-        price:product_.price,
-        quantity:quantity
-    }
-    AddToCart(product)
 
     const handleChange = (event) => {
         const value = event.target.value;
@@ -132,7 +136,7 @@ function ProductFrontPage() {
                     <button className="product-front-page-button" onClick = {handleCart}>{msg}{!isAdded && <FaShoppingCart className="product-front-page-cart-icon" />}</button>
                 </div>
                 <div>
-                    <button className="product-front-page-button" onClick = {()=>checkoutHandler(product_.price)}>Buy Now<FaHeart className='product-front-page-cart-icon'/></button>
+                    <button className="product-front-page-button" onClick = {(e)=>checkoutHandler(product_.price,e)}>Buy Now<FaHeart className='product-front-page-cart-icon'/></button>
                 </div>
             </div>
         </div>
